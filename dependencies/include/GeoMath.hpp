@@ -44,14 +44,7 @@ namespace Geodesic
         };
         static constexpr int digits = 53;
         static double sq(double x) { return x * x; }
-        /**
-         * The inverse hyperbolic tangent function.  This is defined in terms of
-         * Math.log1p(<i>x</i>) in order to maintain accuracy near <i>x</i> = 0.
-         * In addition, the odd parity of the function is enforced.
-         * <p>
-         * @param x the argument.
-         * @return atanh(<i>x</i>).
-         **********************************************************************/
+        
         static double IeeeRemainder(double a, double b)
         {
             return std::remainder(a, b);
@@ -62,30 +55,14 @@ namespace Geodesic
             y = log1p(2 * y / (1 - y)) / 2;
             return x > 0 ? y : (x < 0 ? -y : x);
         }
-        /**
-         * Normalize a sine cosine pair.
-         * <p>
-         * @param p return parameter for normalized quantities with sinx<sup>2</sup>
-         *   + cosx<sup>2</sup> = 1.
-         * @param sinx the sine.
-         * @param cosx the cosine.
-         **********************************************************************/
+       
         static void norm(Pair<double> &p, double sinx, double cosx)
         {
             double r = std::hypot(sinx, cosx);
             p.first = sinx / r;
             p.second = cosx / r;
         }
-        /**
-         * The error-free sum of two numbers.
-         * <p>
-         * @param u the first number in the sum.
-         * @param v the second number in the sum.
-         * @param p output Pair(<i>s</i>, <i>t</i>) with <i>s</i> = round(<i>u</i> +
-         *   <i>v</i>) and <i>t</i> = <i>u</i> + <i>v</i> - <i>s</i>.
-         * <p>
-         * See D. E. Knuth, TAOCP, Vol 2, 4.2.2, Theorem B.
-         **********************************************************************/
+       
         static void sum(Pair<double> &p, double u, double v)
         {
             double s = u + v;
@@ -99,21 +76,7 @@ namespace Geodesic
             p.first = s;
             p.second = t;
         }
-        /**
-         * Evaluate a polynomial.
-         * <p>
-         * @param N the order of the polynomial.
-         * @param p the coefficient array (of size <i>N</i> + <i>s</i> + 1 or more).
-         * @param s starting index for the array.
-         * @param x the variable.
-         * @return the value of the polynomial.
-         * <p>
-         * Evaluate <i>y</i> = &sum;<sub><i>n</i>=0..<i>N</i></sub>
-         * <i>p</i><sub><i>s</i>+<i>n</i></sub>
-         * <i>x</i><sup><i>N</i>&minus;<i>n</i></sup>.  Return 0 if <i>N</i> &lt; 0.
-         * Return <i>p</i><sub><i>s</i></sub>, if <i>N</i> = 0 (even if <i>x</i> is
-         * infinite or a nan).  The evaluation uses Horner's method.
-         **********************************************************************/
+        
         static double polyval(int N, const std::vector<double> p, int s, double x)
         {
             double y = N < 0 ? 0 : p[s++];
@@ -121,20 +84,7 @@ namespace Geodesic
                 y = y * x + p[s++];
             return y;
         }
-        /**
-         * Coarsen a value close to zero.
-         * <p>
-         * @param x the argument
-         * @return the coarsened value.
-         * <p>
-         * This makes the smallest gap in <i>x</i> = 1/16 &minus; nextafter(1/16, 0)
-         * = 1/2<sup>57</sup> for reals = 0.7 pm on the earth if <i>x</i> is an angle
-         * in degrees.  (This is about 1000 times more resolution than we get with
-         * angles around 90 degrees.)  We use this to avoid having to deal with near
-         * singular cases when <i>x</i> is non-zero but tiny (e.g.,
-         * 10<sup>&minus;200</sup>).  This converts &minus;0 to +0; however tiny
-         * negative numbers get converted to &minus;0.
-         **********************************************************************/
+        
         static double AngRound(double x)
         {
             constexpr double z = 1 / 16.0;
@@ -143,46 +93,18 @@ namespace Geodesic
             y = y < z ? z - (z - y) : y;
             return std::copysign(y, x);
         }
-        /**
-         * Normalize an angle.
-         * <p>
-         * @param x the angle in degrees.
-         * @return the angle reduced to the range [&minus;180&deg;, 180&deg;).
-         * <p>
-         * The range of <i>x</i> is unrestricted.
-         **********************************************************************/
+     
         static double AngNormalize(double x)
         {
             double y = IeeeRemainder(x, 360.0);
             return std::abs(y) == 180 ? std::copysign(180.0, x) : y;
         }
-        /**
-         * Normalize a latitude.
-         * <p>
-         * @param x the angle in degrees.
-         * @return x if it is in the range [&minus;90&deg;, 90&deg;], otherwise
-         *   return NaN.
-         **********************************************************************/
+       
         static double LatFix(double x)
         {
             return std::abs(x) > 90 ? std::numeric_limits<double>::quiet_NaN() : x;
         }
-        /**
-         * The exact difference of two angles reduced to [&minus;180&deg;, 180&deg;].
-         * <p>
-         * @param x the first angle in degrees.
-         * @param y the second angle in degrees.
-         * @param p output Pair(<i>d</i>, <i>e</i>) with <i>d</i> being the rounded
-         *   difference and <i>e</i> being the error.
-         * <p>
-         * This computes <i>z</i> = <i>y</i> &minus; <i>x</i> exactly, reduced to
-         * [&minus;180&deg;, 180&deg;]; and then sets <i>z</i> = <i>d</i> + <i>e</i>
-         * where <i>d</i> is the nearest representable number to <i>z</i> and
-         * <i>e</i> is the truncation error.  If <i>z</i> = &plusmn;0&deg; or
-         * &plusmn;180&deg;, then the sign of <i>d</i> is given by the sign of
-         * <i>y</i> &minus; <i>x</i>.  The maximum absolute value of <i>e</i> is
-         * 2<sup>&minus;26</sup> (for doubles).
-         **********************************************************************/
+        
         static void AngDiff(Pair<double> &p, double x, double y)
         {
             sum(p, IeeeRemainder(-x, 360.0), IeeeRemainder(y, 360.0));
@@ -190,16 +112,7 @@ namespace Geodesic
             if (p.first == 0 || std::abs(p.first) == 180)
                 p.first = std::copysign(p.first, p.second == 0 ? y - x : -p.second);
         }
-        /**
-         * Evaluate the sine and cosine function with the argument in degrees
-         *
-         * @param p return Pair(<i>s</i>, <i>t</i>) with <i>s</i> = sin(<i>x</i>) and
-         *   <i>c</i> = cos(<i>x</i>).
-         * @param x in degrees.
-         * <p>
-         * The results obey exactly the elementary properties of the trigonometric
-         * functions, e.g., sin 9&deg; = cos 81&deg; = &minus; sin 123456789&deg;.
-         **********************************************************************/
+        
         static void sincosd(Pair<double> &p, double x)
         {
             double r;
@@ -235,21 +148,7 @@ namespace Geodesic
             p.first = sinx;
             p.second = 0.0 + cosx;
         }
-        /**
-         * Evaluate the sine and cosine function with reduced argument plus correction
-         *
-         * @param p return Pair(<i>s</i>, <i>t</i>) with <i>s</i> =
-         *   sin(<i>x</i> +  <i>t</i>) and <i>c</i> = cos(<i>x</i> + <i>t</i>).
-         * @param x reduced angle in degrees.
-         * @param t correction in degrees.
-         * <p>
-         * This is a variant of GeoMath.sincosd allowing a correction to the angle to
-         * be supplied.  <i>x</i> x must be in [&minus;180&deg;, 180&deg;] and
-         * <i>t</i> is assumed to be a <i>small</i> correction.  GeoMath.AngRound is
-         * applied to the reduced angle to prevent problems with <i>x</i> + <i>t</i>
-         * being extremely close but not exactly equal to one of the four cardinal
-         * directions.
-         **********************************************************************/
+        
         static void sincosde(Pair<double> &p, double x, double t)
         {
             double r;
@@ -283,16 +182,7 @@ namespace Geodesic
             p.first = sinx;
             p.second = 0.0 + cosx;
         }
-        /**
-         * Evaluate the atan2 function with the result in degrees
-         *
-         * @param y the sine of the angle
-         * @param x the cosine of the angle
-         * @return atan2(<i>y</i>, <i>x</i>) in degrees.
-         * <p>
-         * The result is in the range [&minus;180&deg; 180&deg;].  N.B.,
-         * atan2d(&plusmn;0, &minus;1) = &plusmn;180&deg;.
-         **********************************************************************/
+        
         static double atan2d(double y, double x)
         {
             int q = 0;

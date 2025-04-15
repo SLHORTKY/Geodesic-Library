@@ -29,23 +29,14 @@ namespace Shapes
         Filter(std::vector<Filter *> shapes);
         ~Filter();
 
-        /// @brief a function to move the shape along a direction(azimuth) by a distance(distance)
-        /// @param azimuth
-        /// @param distance
-        /// @param isArcLength
-        /// this function modifies the position(lat lon alt) parameters of the points that defines the shape
+
         virtual void move(double azimuth, double distance, bool isArcLength) = 0;
         SHAPES getShapeType();
-        /// @brief a function to determine whether the point is inside or outside the bounded shape
-        /// @param point
-        /// @return true if the point is inside and false if it is outside of the shape
+        
         virtual bool doesContain(BasePoint *point) = 0;
 
-        /// @brief calculates the perimeter of the given shape
-        /// @return perimeter in meters
         virtual double calculatePerimeter() = 0;
-        /// @brief calculates the area of the given shape
-        /// @return area in meters
+      
         virtual double calculateArea() = 0;
     };
     /// @brief  simple representation of a Circle even though it can be initialized with multiple types of points

@@ -148,44 +148,6 @@ void GeocentrictoGeodesic_ConversionTest()
     test_counter++;
 }
 
-///@test
-void GeodesictoUTMSpesific_ConversionTest()
-{
-    static int test_counter = 0;
-    static int error_count = 0;
-    bool success = true;
-    std::vector<int> failed_cases;
-    std::vector<bool> results;
-
-    int num_vector = Geodesic_UTM_Points.size();
-    for (size_t i = 0; i < num_vector; i++)
-    {
-        GeodesicPoint *point = dynamic_cast<GeodesicPoint *>(std::get<0>(Geodesic_UTM_Points[i]));
-
-        UtmPoint *point1 = dynamic_cast<UtmPoint *>(std::get<1>(Geodesic_UTM_Points[i]));
-        BasePoint *point2 = point->geodesicToUtmSpecificConversion(point1->getZone(), point1->getHemisphere());
-        results.push_back(point1->compareLocation(point2));
-    }
-    for (size_t i = 0; i < results.size(); i++)
-    {
-        if (results[i] == false)
-        {
-            success = false;
-            failed_cases.push_back(i);
-            error_count++;
-        }
-    }
-
-    logResult("GeodesicPoint->convert(POINT_TYPE::UTM)", success, error_count, failed_cases, "GeodesictoUTMSpesific_ConversionTest()");
-
-    test_counter++;
-}
-
-///@test 
-void UTM_GeodesicSpesific_ConvertionTest()
-{
-    
-}
 
 ///@test Tests UTM TO GEODESIC and INVERSE CONVERSIONS TEST for both HEMISPHERIC AND ZONE_LETTER types;
 void GeodesicToUTMStandard(POINT_TYPE type){

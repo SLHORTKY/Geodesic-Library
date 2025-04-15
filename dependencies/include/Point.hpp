@@ -145,29 +145,15 @@ namespace Point
     protected:
         POINT_TYPE type;
     public:
-        // standard tolerance for operations that may result
-        //  in round off mismatches, double == double problem instead it applies a different operation (double - double )< comp_tol;
-        //  it also provides convergence test on iterative calculations of distance or area
-
-        /// @brief primary validation compares point types if both have the same type returns true else false
-        /// @param p1_type first point type
-        /// @param p2_type second point type
-        /// @return true or false
+        
         static bool primaryTypeValidation(POINT_TYPE p1_type, POINT_TYPE p2_type);
         POINT_TYPE getPointType();
-        /// @brief calculates the distance between two points
-        /// @param point
-        /// @param arcmode alternative measure of distance
-        /// @return the distance in meters
+        
         virtual double calculateDistance(BasePoint *point, bool arcmode = 0) = 0;
-        /// @brief a function to convert in between different point types
-        /// @param type type to convert to
-        /// @return converted point pointer
+       
         virtual BasePoint *convert(POINT_TYPE type) = 0;
         virtual bool compareLocation(BasePoint *point, double tol = 1e-5) = 0;
-        /// @brief object vise comparison
-        /// @param point
-        /// @return if the same object true else false
+       
         virtual bool isEqual(BasePoint *point) = 0;
         virtual ~BasePoint() = default;
         virtual void repr() = 0; // this is a simple representation function for testing and debugging can be deleted
@@ -198,23 +184,9 @@ namespace Point
         double calculateDistance(BasePoint *point, bool arcmode = 0) override;
         BasePoint *convert(POINT_TYPE type) override;
 
-        /// @brief use this function if you need to convert to Utm with a specific zone and Hemisphere
-        /// @param zone
-        /// @param hemisphere
-        /// @return new UtmPoint();
-        BasePoint *geodesicToUtmSpecificConversion(short zone, HEMISPHERE hemisphere);
-
-        /// @brief compare locations is a function that finds the
-        /// absolute distance between points and whether these points are on the same location
-        /// @param this inherent parameter
-        /// @param point point to compare locations with
-        /// @return true or false depending on whether this points coordinates are same with the other one
+    
         bool compareLocation(BasePoint *point, double tol = 1e-5) override;
 
-        /// @brief this is a elimination tool to decide whether two points have the same id or not
-        /// @param this inherent Basepoint parameter
-        /// @param point point to compare with
-        /// @return true or false depending on whether this->pointId == point->pointId ?
         virtual bool isEqual(BasePoint *point) override;
         void repr(); // this is a simple representation function for testing and debugging can be deleted
         bool isValid() override;
@@ -245,17 +217,8 @@ namespace Point
         double calculateDistance(BasePoint *point, bool arcmode = 0) override;
         BasePoint *convert(POINT_TYPE type) override;
 
-        /// @brief compare locations is a function that finds the
-        /// absolute distance between points and whether these points are on the same location
-        /// @param this inherent parameter
-        /// @param point point to compare locations with
-        /// @return true or false depending on whether this points coordinates are same with the other one
-        bool compareLocation(BasePoint *point, double tol = 1e-5) override;
 
-        /// @brief this is a elimination tool to decide whether two points have the same id or not
-        /// @param this inherent Base point parameter
-        /// @param point point to compare with
-        /// @return true or false depending on whether this->pointId == point->pointId ?
+        bool compareLocation(BasePoint *point, double tol = 1e-5) override;
         virtual bool isEqual(BasePoint *point) override;
         void repr() override; // this is a simple representation function for testing and debugging can be deleted
         bool isValid() override;
@@ -295,17 +258,8 @@ namespace Point
         double calculateDistance(BasePoint *point, bool arcmode = 0) override;
         BasePoint *convert(POINT_TYPE type) override;
 
-        /// @brief compare locations is a function that finds the
-        /// absolute distance between points and whether these points are on the same location
-        /// @param this inherent parameter
-        /// @param point point to compare locations with
-        /// @return true or false depending on whether this points coordinates are same with the other one
         bool compareLocation(BasePoint *point, double tol = 1e-12) override;
 
-        /// @brief this is a elimination tool to decide whether two points have the same id or not
-        /// @param this inherent Basepoint parameter
-        /// @param point point to compare with
-        /// @return true or false depending on whether this->pointId == point->pointId ?
         virtual bool isEqual(BasePoint *point) override;
         void repr(); // this is a simple representation function for testing and debugging can be deleted
         bool isValid() override;

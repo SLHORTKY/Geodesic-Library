@@ -9,8 +9,6 @@
 
 namespace Geodesic
 {
-    // Kobj is KarneyFF composition object in Geodesic namespace executes -> karneyFF() constructor and is an object of that class;
-    // it is our main gateway to using KarneyFF Geodesic Functions with predefined geodesic reference frames.
     class KarneyFF;
     extern KarneyFF kObj;
 

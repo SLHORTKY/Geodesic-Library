@@ -565,10 +565,7 @@ BasePoint *Point::GeodesicPoint::convert(POINT_TYPE type)
     }
     return nullptr;
 }
-Point::BasePoint *Point::GeodesicPoint::geodesicToUtmSpecificConversion(short zone, HEMISPHERE hemisphere)
-{
-    return Point::PointConversion::geodesicToUtm(this->latitude, this->longitude, this->altitude, zone, hemisphere);
-}
+
 
 bool Point::GeodesicPoint::compareLocation(BasePoint *point, double tol)
 {
